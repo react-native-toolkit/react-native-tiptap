@@ -1,0 +1,22 @@
+{
+  "name": "react-native-tiptap-example",
+  "displayName": "Tiptap Example",
+  "expo": {
+    "name": "react-native-tiptap-example",
+    "slug": "react-native-tiptap-example",
+    "description": "Example app for react-native-tiptap",
+    "privacy": "public",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
