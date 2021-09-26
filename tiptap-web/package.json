@@ -1,0 +1,43 @@
+{
+  "name": "tiptap-react-window-objects-accept-input-mentions",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "main": "src/index.tsx",
+  "dependencies": {
+    "@tiptap/extension-document": "2.0.0-beta.13",
+    "@tiptap/extension-highlight": "2.0.0-beta.16",
+    "@tiptap/extension-mention": "2.0.0-beta.72",
+    "@tiptap/extension-paragraph": "2.0.0-beta.17",
+    "@tiptap/extension-placeholder": "2.0.0-beta.30",
+    "@tiptap/extension-task-item": "2.0.0-beta.18",
+    "@tiptap/extension-task-list": "2.0.0-beta.17",
+    "@tiptap/extension-text": "2.0.0-beta.13",
+    "@tiptap/extension-text-align": "2.0.0-beta.23",
+    "@tiptap/react": "2.0.0-beta.66",
+    "@tiptap/starter-kit": "2.0.0-beta.104",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-scripts": "4.0.3",
+    "tippy.js": "6.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "17.0.20",
+    "@types/react-dom": "17.0.9",
+    "inliner": "^1.13.1",
+    "typescript": "4.4.2"
+  },
+  "homepage": "./",
+  "scripts": {
+    "start": "react-scripts start && npm run build",
+    "build": "react-scripts build && mkdir -p ../draftjs-html-source && inliner -ni ./build/index.html > ../draftjs-html-source/draftjs-source.html",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
