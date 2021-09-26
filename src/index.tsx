@@ -44,16 +44,12 @@ export interface TipTapEditorProps
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onEditorUpdate?: (state: TipTapEditorState) => unknown;
   style?: StyleProp<ViewStyle>;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onStyleChanged?: (styles: string[]) => unknown;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onBlockTypeChanged?: (blockType: string) => unknown;
-  placeholder?: string;
-  defaultValue?: string;
-  styleSheet?: string;
-  styleMap?: object;
-  blockRenderMap?: object;
+  mentions?: string[];
+  // placeholder?: string;
+  // styleSheet?: string;
+  // styleMap?: object;
   onEditorReady?: () => unknown;
+  defaultValue: { html: string } | { json: Record<string, unknown> };
 }
 
 export type AvailableActions = typeof actionsList[number];
@@ -61,6 +57,7 @@ export type AvailableActions = typeof actionsList[number];
 export interface TipTapEditorState {
   activeStates: Partial<Record<AvailableActions, boolean>>;
   data: { html: string; json: string };
+  isReady: boolean;
 }
 
 class TipTapEditor extends Component<TipTapEditorProps, TipTapEditorState> {
@@ -75,6 +72,7 @@ class TipTapEditor extends Component<TipTapEditorProps, TipTapEditorState> {
         html: '',
         json: '',
       },
+      isReady: false,
     };
   }
 
@@ -98,10 +96,55 @@ class TipTapEditor extends Component<TipTapEditorProps, TipTapEditorState> {
       activeStates: activeStatesFromWebView,
       data: editorData,
     });
+
+    /**
+     * Received first message, editor is ready
+     */
+    if (!this.state.isReady) {
+      this.setState({ isReady: true }, () => {
+        this.setDefaultValue();
+        this.setMentions();
+      });
+    }
+
     this.props.onEditorUpdate?.({
       activeStates: activeStatesFromWebView,
       data: editorData,
+      isReady: this.state.isReady,
     });
+  };
+
+  setDefaultValue = () => {
+    const { defaultValue } = this.props;
+    // @ts-ignore
+    if (defaultValue?.html) {
+      this._webViewRef.current &&
+        this._webViewRef.current.injectJavaScript(
+          // @ts-ignore
+          `window.setContentHtml(${defaultValue.html});true;`
+        );
+    }
+    // @ts-ignore
+    if (defaultValue?.json) {
+      this._webViewRef.current &&
+        this._webViewRef.current.injectJavaScript(
+          // @ts-ignore
+          `window.setContentHtml(${JSON.stringify(defaultValue.json)});true;`
+        );
+    }
+  };
+
+  setMentions = () => {
+    const { mentions } = this.props;
+    if (mentions && mentions.length) {
+      console.log(`window.setMentions(${JSON.stringify(mentions)});true;`);
+
+      this._webViewRef.current &&
+        this._webViewRef.current.injectJavaScript(
+          // @ts-ignore
+          `window.setMentions('${JSON.stringify(mentions)}');true;`
+        );
+    }
   };
 
   render() {
@@ -111,9 +154,9 @@ class TipTapEditor extends Component<TipTapEditorProps, TipTapEditorState> {
       <WebView
         ref={this._webViewRef}
         style={style}
-        source={{ uri: 'https://csb-e6ykz.netlify.app/' }}
+        source={{ uri: 'https://csb-hyzxr.netlify.app/' }}
         keyboardDisplayRequiresUserAction={false}
-        originWhitelist={['https://csb-e6ykz.netlify.app']}
+        originWhitelist={['https://csb-hyzxr.netlify.app']}
         onMessage={this._onMessage}
         {...otherProps}
       />

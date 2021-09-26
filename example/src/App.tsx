@@ -55,7 +55,7 @@ const EditorToolBar: FC<{
               key={eachIndex}
               text={each}
               // @ts-ignore
-              isActive={editorState.activeStates[each]}
+              isActive={editorState?.activeStates[each]}
               action={() => editorRef.current?.toggle(each)}
             />
           );
@@ -75,6 +75,23 @@ export default function App() {
       <TipTapEditor
         // @ts-ignore
         ref={editorRef}
+        defaultValue={{
+          json: {
+            type: 'doc',
+            content: [
+              {
+                type: 'paragraph',
+                content: [
+                  {
+                    type: 'text',
+                    text: 'Example Text',
+                  },
+                ],
+              },
+            ],
+          },
+        }}
+        mentions={['dani', 'paul', 'john']}
         onEditorUpdate={(state) => setEditorState(state)}
         style={styles.editorContainer}
       />
