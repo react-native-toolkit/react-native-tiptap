@@ -1,31 +1,104 @@
-import * as React from 'react';
+import React, { useRef, MutableRefObject, useState, FC } from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
+import TipTapEditor, { actionsList, TipTapEditorState } from '../../src/index';
 
-import { StyleSheet, View, Text } from 'react-native';
-import Tiptap from 'react-native-tiptap';
+const ControlButton: FC<{
+  text: string;
+  action: () => unknown;
+  isActive: boolean;
+}> = ({
+  text,
+  action,
+  isActive,
+}: {
+  text: string;
+  action: () => unknown;
+  isActive: boolean;
+}) => {
+  return (
+    <TouchableOpacity
+      style={[
+        styles.controlButtonContainer,
+        // eslint-disable-next-line react-native/no-inline-styles
+        isActive ? { backgroundColor: 'gold' } : {},
+      ]}
+      onPress={action}
+    >
+      <Text>{text}</Text>
+    </TouchableOpacity>
+  );
+};
+
+const EditorToolBar: FC<{
+  editorRef: MutableRefObject<TipTapEditor | undefined>;
+  editorState: TipTapEditorState | undefined;
+}> = ({
+  editorRef,
+  editorState,
+}: {
+  editorRef: MutableRefObject<TipTapEditor | undefined>;
+  editorState: TipTapEditorState | undefined;
+}) => {
+  return (
+    <View>
+      <ScrollView horizontal={true}>
+        {actionsList.map((each, eachIndex) => {
+          return (
+            <ControlButton
+              key={eachIndex}
+              text={each}
+              // @ts-ignore
+              isActive={editorState.activeStates[each]}
+              action={() => editorRef.current?.toggle(each)}
+            />
+          );
+        })}
+      </ScrollView>
+    </View>
+  );
+};
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
-
-  React.useEffect(() => {
-    Tiptap.multiply(3, 7).then(setResult);
-  }, []);
+  const editorRef = useRef<TipTapEditor>();
+  const [editorState, setEditorState] = useState<TipTapEditorState>();
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <EditorToolBar editorState={editorState} editorRef={editorRef} />
+      <TipTapEditor
+        // @ts-ignore
+        ref={editorRef}
+        onEditorUpdate={(state) => setEditorState(state)}
+        style={styles.editorContainer}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  container: { flex: 1 },
+  editorContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width,
   },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
+  toolbarContainer: {
+    height: 56,
+    flexDirection: 'row',
+    backgroundColor: 'silver',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  controlButtonContainer: {
+    padding: 8,
+    borderRadius: 2,
+    height: 50,
   },
 });
