@@ -2,26 +2,6 @@
 
 A full fledged React Native Rich Text editor based on tiptap
 
-## Installation
+This project is based on implementation similar to [React Native Draftjs](https://github.com/react-native-toolkit/react-native-draftjs)
 
-```sh
-npm install react-native-tiptap
-```
-
-## Usage
-
-```js
-import Tiptap from "react-native-tiptap";
-
-// ...
-
-const result = await Tiptap.multiply(3, 7);
-```
-
-## Contributing
-
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
-
-## License
-
-MIT
+The project is no longer actively maintained, Reach out to me on [Twitter](https://twitter.com/dani_akash_) for more information.
